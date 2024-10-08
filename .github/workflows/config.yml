@@ -2,7 +2,7 @@ name: Selenium Tests
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Run every hour
+    - cron: '0 * * * *'  # Run every hour
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'  # Ensure Python 3.x is used
+          python-version: '3.12.6'  # Use the Python version compatible with your test
 
       - name: Install dependencies
         run: |
@@ -33,7 +33,7 @@ jobs:
           wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/129.0.6668.58/chromedriver_linux64.zip
           unzip /tmp/chromedriver.zip -d /usr/local/bin/
 
-      - name: Run tests
+      - name: Run Forget Password Test
         run: pytest test_forgetPassword.py
 
       - name: Upload test results
@@ -47,4 +47,3 @@ jobs:
         with:
           name: screenshots
           path: screenshots/*.png
-
