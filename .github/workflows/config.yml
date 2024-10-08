@@ -34,7 +34,7 @@ jobs:
           unzip /tmp/chromedriver.zip -d /usr/local/bin/
 
       - name: Run tests
-        run: pytest test_Wordpresslogin1_2155.py
+        run: pytest test_forgetPassword.py
 
       - name: Upload test results
         uses: actions/upload-artifact@v3
