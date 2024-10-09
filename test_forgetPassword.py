@@ -63,10 +63,15 @@ class TestForgetPasswordTest:
             )
             assert "Successfully requested not the password reset" in success_message.text, "Expected success message not found."
 
-            # Take a screenshot of the success message
-            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            screenshot_path = f"screenshots/password_reset_{timestamp}.png"
-            self.driver.save_screenshot(screenshot_path)
+            # Create the screenshots directory if it doesn't exist
+            if not os.path.exists("screenshots"):
+            os.makedirs("screenshots")
+
+            # Capture screenshot before submission
+            driver.save_screenshot("screenshots/before_submit.png")
+
+            # Capture screenshot after submission
+            driver.save_screenshot("screenshots/after_submit.png")
 
             status = "Passed"
 
