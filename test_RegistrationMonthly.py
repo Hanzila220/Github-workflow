@@ -1,19 +1,21 @@
+import os
 import csv
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
-# Path to your ChromeDriver (if running locally or providing it in a container)
-driver_path = "/path/to/chromedriver"
-
-# Setting up options to run headless in CI environments like GitHub Actions
+# Set up Chrome options for running in CI environments like GitHub Actions
 options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # Run Chrome in headless mode
-options.add_argument("--no-sandbox")  # Required for running in some CI environments
-options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-options.add_argument("--window-size=1920x1080")  # Set the window size for full-page screenshots
+options.add_argument("--headless")  # Run headless in CI
+options.add_argument("--no-sandbox")  # Overcome limited resource problems
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--window-size=1920x1080")
 
-driver = webdriver.Chrome(executable_path=driver_path, options=options)
+# Initialize ChromeDriver using Service in Selenium 4.x and WebDriver Manager to auto-manage the driver
+service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=options)
 
 # Open the registration page
 driver.get("https://smoothmaths.co.uk/register/11-plus-subscription-plan/")
@@ -32,7 +34,7 @@ driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 time.sleep(2)
 
 # Switch to the Stripe iframe for card details input
-iframe = driver.find_element(By.CSS_SELECTOR, "iframe[name^='__sk_test_51Q82lIRxdGUDB17KkPLUHe2NCLtqrRBORhnVv95WByU7xgRj1BptZLIXRu8I1aXsMjniFc13DlHYhb95b9sMFj5W009uR2HxmQ']")
+iframe = driver.find_element(By.CSS_SELECTOR, "iframe[name^='__privateStripeFrame']")
 driver.switch_to.frame(iframe)
 
 # Fill out Stripe test card details
@@ -50,9 +52,6 @@ if not os.path.exists("screenshots"):
 # Capture screenshot before submission
 driver.save_screenshot("screenshots/before_submit.png")
 
-# Capture screenshot after submission
-driver.save_screenshot("screenshots/after_submit.png")
-
 # Submit the form
 submit_button = driver.find_element(By.NAME, 'woocommerce_checkout_place_order')
 submit_button.click()
@@ -61,7 +60,7 @@ submit_button.click()
 time.sleep(10)
 
 # Capture screenshot after submission
-driver.save_screenshot("after_submit.png")
+driver.save_screenshot("screenshots/after_submit.png")
 
 # Check for confirmation message and save the result
 try:
@@ -83,3 +82,4 @@ print(result)
 
 # Close the browser
 driver.quit()
+
