@@ -24,6 +24,9 @@ jobs:
       - name: Run Registration Monthly tests
         run: pytest test_RegistrationMonthly.py
 
+      - name: Run Forget Password Test
+        run: pytest test_forgetPassword.py
+
       - name: Upload screenshots
         uses: actions/upload-artifact@v3
         with:
