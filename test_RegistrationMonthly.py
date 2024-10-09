@@ -43,8 +43,15 @@ driver.find_element(By.NAME, 'cvc').send_keys("123")
 # Switch back to main content
 driver.switch_to.default_content()
 
+# Create the screenshots directory if it doesn't exist
+if not os.path.exists("screenshots"):
+    os.makedirs("screenshots")
+
 # Capture screenshot before submission
-driver.save_screenshot("before_submit.png")
+driver.save_screenshot("screenshots/before_submit.png")
+
+# Capture screenshot after submission
+driver.save_screenshot("screenshots/after_submit.png")
 
 # Submit the form
 submit_button = driver.find_element(By.NAME, 'woocommerce_checkout_place_order')
